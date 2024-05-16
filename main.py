@@ -1,5 +1,3 @@
-import os
-
 # Inicialização das variáveis que armazenarão valores-chave
 contMeses = 0
 maiorTemp = 0
