@@ -1,9 +1,13 @@
+import os
+
 # Inicialização das variáveis que armazenarão valores-chave
 contMeses = 0
 maiorTemp = 0
 menorTemp = 50
 mesMenorTemp = 0
 mesMaiorTemp = 0
+somaTemperaturas = 0
+qMesesEsc = 0
 
 # Declaração de um array contendo os meses do ano
 meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
@@ -20,6 +24,13 @@ while contMeses != 12:
         continue
     else:
         print('Registrado!')
+        # Soma das temperaturas
+        somaTemperaturas += temperatura
+
+        # Verificação de meses escaldantes
+        if temperatura > 33:
+            qMesesEsc += 1
+
         # Verificação da maior e da menor temperatura
         if temperatura > maiorTemp:
             maiorTemp = temperatura
@@ -30,5 +41,8 @@ while contMeses != 12:
         contMeses += 1
         
 # Output final do programa
-print(f'Maior temperatura lida: {maiorTemp:.1f} °C | Mês: {meses[mesMaiorTemp]}')
-print(f'Menor temperatura lida: {menorTemp:.1f} °C | Mês: {meses[mesMenorTemp]}')
+print('===='*20)
+print(f'Temperatura média máxima anual: {somaTemperaturas/12:.2f} °C')
+print(f'Quantidade de meses escaldantes (acima de 33 °C): {qMesesEsc}')
+print(f'Maior temperatura lida: {maiorTemp:.1f} °C no mês de {meses[mesMaiorTemp]}')
+print(f'Menor temperatura lida: {menorTemp:.1f} °C no mês de {meses[mesMenorTemp]}')
