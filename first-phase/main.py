@@ -1,3 +1,8 @@
+# # ======================================================================================= # #
+# | Primeira fase do projeto avaliativo da cadeira de Lógica e Programação de Computadores  | #
+# | Escrito por Enzo Cezar Garcia Rocha em 16/05/2024                                       | #
+# # ======================================================================================= # #
+
 # Inicialização das variáveis que armazenarão valores-chave
 contMeses = 0
 maiorTemp = 0
