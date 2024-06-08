@@ -31,8 +31,50 @@ def gerarMenu():
     print('===='*12)
     print('> Selecione a opção desejada:\n')
     print('  1. Visualizar todos os dados\n  2. Visualizar dados de precipitação\n  3. Visualizar dados de temperatura\n  4. Visualizar dados de umidade e vento\n')
+    print('  0. Sair\n')
     print('===='*12)
     print()
+
+def validaMes(mes):
+    if mes >= 1 and mes <= 12:
+        return True
+    else:
+        print('Mês inválido! Tente novamente.\n')
+        return False
+    
+def validaAno(ano, mes):
+    if ano >= 1961 and ano <= 2016:
+        if ano == 2016 and mes > 7:
+            print('Mês inexistente na base de dados! Tente novamente.\n')
+            return False
+        else:
+            return True
+    else:
+        print('Ano inválido! Tente novamente.\n')
+        return False
+
+def validaEntrada():
+    validaMesI = False
+    while validaMesI == False:
+        mesI = int(input('Digite o mês inicial (1 a 12): '))
+        validaMesI = validaMes(mesI)
+        if validaMesI == True:
+            validaAnoI = False
+            while validaAnoI == False:
+                anoI = int(input('Digite o ano inicial (1961 a 7/2016):'))
+                validaAnoI = validaAno(anoI, mesI)
+                if validaAnoI == True:
+                    validaMesF = False
+                    while validaMesF == False:
+                        mesF = int(input('Digite o mês final (1 a 12)'))
+                        validaMesF = validaMes(mesF)
+                        if validaMesF == True:
+                            validaAnoF = False
+                            while validaAnoF == False:
+                                anoF = int(input('Digite o ano final (1961 a 7/2016):'))
+                                validaAnoF = validaAno(anoF, mesF)
+                                if validaAnoF == True:
+                                    return [mesI, anoI, mesF, anoF]
 
 # Carga dos dados nas variáveis
 dados = carregarDados('dados.csv')
@@ -46,7 +88,8 @@ while True:
         print('Fim do programa!')
         break
     elif op == 1:
-        print('todos')
+        validaEntrada()
+        
     elif op == 2:
         print('precipitação')
     elif op == 3:
