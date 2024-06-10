@@ -61,26 +61,96 @@ def validaEntrada():
         if validaMesI == True:
             validaAnoI = False
             while validaAnoI == False:
-                anoI = int(input('Digite o ano inicial (1961 a 7/2016):'))
+                anoI = int(input('Digite o ano inicial (1961 a 7/2016): '))
                 validaAnoI = validaAno(anoI, mesI)
                 if validaAnoI == True:
                     validaMesF = False
                     while validaMesF == False:
-                        mesF = int(input('Digite o mês final (1 a 12)'))
+                        mesF = int(input('Digite o mês final (1 a 12): '))
                         validaMesF = validaMes(mesF)
                         if validaMesF == True:
                             validaAnoF = False
                             while validaAnoF == False:
-                                anoF = int(input('Digite o ano final (1961 a 7/2016):'))
+                                anoF = int(input('Digite o ano final (1961 a 7/2016): '))
                                 validaAnoF = validaAno(anoF, mesF)
                                 if validaAnoF == True:
                                     return [mesI, anoI, mesF, anoF]
+
+def ordenarAnos(mesI, anoI, mesF, anoF):
+    if anoI > anoF:
+        aux = anoF
+        anoF = anoI
+        anoI = aux
+
+        aux = mesI
+        mesI = mesF
+        mesF = aux
+    elif anoF == anoI:
+        if mesI > mesF:
+            aux = mesI
+            mesI = mesF
+            mesF = aux
+
+    return [mesI, anoI, mesF, anoF]
+
+
+def setarIntervalo(arquivo, datas, posI, posF, cont):
+    datas[2] = f'{int(datas[2] + 1)}'
+
+    for linha in arquivo:
+        if (f'01/0{datas[0]}/{datas[1]}') in linha or (f'01/{datas[0]}/{datas[1]}') in linha:
+            if posI == 0:
+                posI = cont
+            else:
+                continue
+
+        if (f'01/0{datas[2]}/{datas[3]}') in linha or (f'01/{datas[2]}/{datas[3]}') in linha:
+            if posF == 0:
+                posF = cont
+            else:
+                continue
+        cont += 1
+    return posI,posF
+
+def visualizarTodos(mesI, anoI, mesF, anoF, arquivo, cab):
+    datas = ordenarAnos(mesI, anoI, mesF, anoF)
+
+    posI = 0
+    posF = 0
+    cont = 0
+        
+    posI, posF = setarIntervalo(arquivo, datas, posI, posF, cont)
+
+    print('===='*12)
+    print(f'{cab[0]} | {cab[1]} | {cab[2]} | {cab[3]} | {cab[4]} | {cab[5]} | {cab[6]} | {cab[7]}')
+    print()
+    for i in range(posI, posF):
+        print(arquivo[i])
+    print()
+        
+def visualizarPrec(mesI, anoI, mesF, anoF, arquivo):
+    datas = ordenarAnos(mesI, anoI, mesF, anoF)
+
+    posI = 0
+    posF = 0
+    cont = 0
+        
+    posI, posF = setarIntervalo(arquivo, datas, posI, posF, cont)
+
+    print('===='*12)
+    print('> Precipitação:')
+    print()
+    for i in range(posI, posF):
+        print(f'{arquivo[i][0]}: {arquivo[i][1]}')
+    print()
+
+
+# ====================================== Programa principal ======================================
 
 # Carga dos dados nas variáveis
 dados = carregarDados('dados.csv')
 cab = salvarCabecalho('dados.csv')
 
-# ========================= Programa principal =========================
 while True:
     gerarMenu()
     op = int(input('Digite o número da opção: '))
@@ -88,13 +158,20 @@ while True:
         print('Fim do programa!')
         break
     elif op == 1:
-        validaEntrada()
+        intervalo = validaEntrada()
+        visualizarTodos(intervalo[0], intervalo[1], intervalo[2], intervalo[3], dados, cab)
         
     elif op == 2:
-        print('precipitação')
+        intervalo = validaEntrada()
+        visualizarPrec(intervalo[0], intervalo[1], intervalo[2], intervalo[3], dados)
+
     elif op == 3:
+        intervalo = validaEntrada()
         print('temperaturas')
+
     elif op == 4:
+        intervalo = validaEntrada()
         print('vento e umidade')
+
     else:
         print('Opção inválida!')
