@@ -1,6 +1,6 @@
 # # ====================================================================================== # #
 # | Segunda fase do projeto avaliativo da cadeira de Lógica e Programação de Computadores  | #
-# | Escrito por Enzo Cezar Garcia Rocha em 07/06/2024                                      | #
+# | Escrito por Enzo Cezar Garcia Rocha com início em 07/06/2024                           | #
 # # ====================================================================================== # #
 
 # O arquivo fornecido teve seu nome alterado para "dados.csv" apenas por 
@@ -144,6 +144,38 @@ def visualizarPrec(mesI, anoI, mesF, anoF, arquivo):
         print(f'{arquivo[i][0]}: {arquivo[i][1]}')
     print()
 
+def visualizarTemp(mesI, anoI, mesF, anoF, arquivo):
+    datas = ordenarAnos(mesI, anoI, mesF, anoF)
+
+    posI = 0
+    posF = 0
+    cont = 0
+        
+    posI, posF = setarIntervalo(arquivo, datas, posI, posF, cont)
+
+    print('===='*12)
+    print('> Temperaturas:')
+    print()
+    for i in range(posI, posF):
+        print(f'{arquivo[i][0]}: Máx.: {arquivo[i][2]} °C | Mín.: {arquivo[i][3]} °C')
+    print()
+
+def visualizarUmiVen(mesI, anoI, mesF, anoF, arquivo):
+    datas = ordenarAnos(mesI, anoI, mesF, anoF)
+
+    posI = 0
+    posF = 0
+    cont = 0
+        
+    posI, posF = setarIntervalo(arquivo, datas, posI, posF, cont)
+
+    print('===='*12)
+    print('> Umidade relativa e Velocidade do vento:')
+    print()
+    for i in range(posI, posF):
+        print(f'{arquivo[i][0]}: Um. Rel.: {arquivo[i][6]:.2f} | Vel. Vento: {arquivo[i][7]:.2f}')
+    print()
+
 
 # ====================================== Programa principal ======================================
 
@@ -167,11 +199,11 @@ while True:
 
     elif op == 3:
         intervalo = validaEntrada()
-        print('temperaturas')
+        visualizarTemp(intervalo[0], intervalo[1], intervalo[2], intervalo[3], dados)
 
     elif op == 4:
         intervalo = validaEntrada()
-        print('vento e umidade')
+        visualizarUmiVen(intervalo[0], intervalo[1], intervalo[2], intervalo[3], dados)
 
     else:
         print('Opção inválida!')
