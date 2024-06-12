@@ -31,6 +31,7 @@ def salvarCabecalho(arq):
 def gerarMenu():
     """Gera o menu interativo"""
     print('===='*12)
+    print()
     print('> Selecione a opção desejada:\n')
     print('  1. Visualizar todos os dados\n  2. Visualizar dados de precipitação\n  3. Visualizar dados de temperatura\n  4. Visualizar dados de umidade e vento\n')
     print('  0. Sair\n')
@@ -196,7 +197,7 @@ def visualizarUmiVen(mesI, anoI, mesF, anoF, arquivo):
     print()
 
 def mesMaisChuvoso(arquivo):
-    """Pega o mês mais chuvoso de cada ano"""
+    """Armazena o mês mais chuvoso de cada ano em um dicionário"""
     maisChuvoso = {}
     meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
     
@@ -233,6 +234,8 @@ def mediaMes(arquivo, meses, mes):
     cont = 1
     numMes = contaMeses(meses, mes, cont)
 
+    # Para cada iteração, reseta os valores, define as posições no arquivo e
+    # realiza o cálculo da média, armazenando no dicionário
     for i in range(2006,2017):
         cont = 0
         mediaMin = 0 
@@ -262,6 +265,7 @@ def contaMeses(meses, mes, cont):
     return numMes
 
 def gerarGrafico(mes, numMes, dicionario):
+    """Gera o gráfico com base nos dados lidos no dicionário"""
     meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
     valores = []
     for i in range(2006,2017):
@@ -271,8 +275,14 @@ def gerarGrafico(mes, numMes, dicionario):
         chave = f'{mes}{i}'
         valores.append(float(dicionario[chave]))
     
-    anos = [a for a in range(2006, 2017)]
+    # Não há registros a partir de julho de 2016, essa é uma medida 
+    # para impedir que o matplotlib dê erro de index
+    if numMes >= 7:
+        anos = [a for a in range(2006, 2016)]
+    else:
+        anos = [a for a in range(2006, 2017)]
 
+    # Monta o gráfico de barras
     plt.bar(anos, valores)
     plt.title(f'Médias mínimas para o mês de {meses[numMes-1]}')
     plt.show()
@@ -285,6 +295,7 @@ def gerarGrafico(mes, numMes, dicionario):
 dados = carregarDados('dados.csv')
 cab = salvarCabecalho('dados.csv')
 
+# Meses que serão comparados com o input do usuário
 mesesInput = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro']
 
 while True:
@@ -312,23 +323,29 @@ while True:
     else:
         print('Opção inválida!')
 
-#    print()
-#    print('> Mês/ano mais chuvosos:\n')
-#    maisChuvoso = mesMaisChuvoso(dados)
-#    for i in range(1961, 2017):
-#        if i in maisChuvoso:
-#            print(maisChuvoso[i])
-#    print()
+    # Em razão de um grande número de cálculos, esse procedimento
+    # Demora em torno de 10 segundos para ser realizado mas está funcional
+    print()
+    print('> Mês/ano mais chuvosos:\n')
+    maisChuvoso = mesMaisChuvoso(dados)
+    # Imprime os dados do dicionário
+    for i in range(1961, 2017):
+        if i in maisChuvoso:
+            print(maisChuvoso[i])
+    print()
 
     mes = input('Digite um mês para exibir dados (ou 0 para sair): ').lower()
     print()
     if mes == '0':
         print('Fim do programa!')
         break
+    # Validação do mês digitado
     while not(mes in mesesInput):
         print('Mês inválido! Tente novamente.\n')
         mes = input('Digite um mês para exibir dados: ').lower()
     
+    # Percorre o dicionário das temperaturas mínimas e já faz a soma para
+    # o cálculo da média geral de temperaturas mínimas
     medias = mediaMes(dados, mesesInput, mes)
     numMes = contaMeses(mesesInput, mes, 1)
     somaMin = 0
@@ -342,6 +359,9 @@ while True:
         cont += 1
     print() 
     
+    # Output da média mínima geral do período
     print(f'> Média mín. geral do período no mês de {mes}: {somaMin/cont:.2f} °C\n')
 
+    # Gera o gráfico com o nome do mês digitado e seus dados
+    # Baseado no dicionário de médias
     gerarGrafico(mes, numMes, medias)
