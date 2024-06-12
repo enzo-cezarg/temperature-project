@@ -176,6 +176,30 @@ def visualizarUmiVen(mesI, anoI, mesF, anoF, arquivo):
         print(f'{arquivo[i][0]}: Um. Rel.: {arquivo[i][6]:.2f} | Vel. Vento: {arquivo[i][7]:.2f}')
     print()
 
+def mesMaisChuvoso(arquivo):
+    maisChuvoso = {}
+    meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    anosInvalidos = [1985, 1986, 1987]
+    for i in range(1961, 2017):
+        maiorPre = 0
+        mesMaiorPre = ''
+        soma = 0
+        if i in anosInvalidos:
+            continue
+        for j in range(1,13):
+            if i == 2016 and j == 7:
+                break
+            soma = 0
+            posI, posF = setarIntervalo(arquivo, [j,i,j,i], 0, 0, 0)
+
+            for dias in range(posI, posF):
+                soma += arquivo[dias][1]
+            if soma > maiorPre:
+                maiorPre = soma
+                mesMaiorPre = meses[j-1]
+        maisChuvoso[i] = (f'{i}: {mesMaiorPre} > {maiorPre:.2f}')
+    return maisChuvoso
+
 
 # ====================================== Programa principal ======================================
 
@@ -207,3 +231,10 @@ while True:
 
     else:
         print('Opção inválida!')
+
+    print()
+    print('> Mês/ano mais chuvosos:\n')
+    maisChuvoso = mesMaisChuvoso(dados)
+    for i in range(1961, 2017):
+        if i in maisChuvoso:
+            print(maisChuvoso[i])
