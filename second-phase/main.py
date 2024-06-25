@@ -224,7 +224,7 @@ def mesMaisChuvoso(arquivo):
             if soma > maiorPre:
                 maiorPre = soma
                 mesMaiorPre = meses[j-1]
-        maisChuvosoTuplas.append((mesMaiorPre, maiorPre))
+        maisChuvosoTuplas.append((mesMaiorPre, maiorPre, str(i)))
         maisChuvoso[i] = (f'{i}: {mesMaiorPre} > {maiorPre:.2f}')
 
     maisChuvosoArquivo(maisChuvosoTuplas)
@@ -235,13 +235,15 @@ def mesMaisChuvoso(arquivo):
 def maisChuvosoArquivo(lista):
     maiorPre = 0
     maiorMes = ''
+    ano = ''
     for tupla in lista:
         if tupla[1] > maiorPre:
             if not(tupla[1] > 8000):
                 maiorPre = tupla[1]
                 maiorMes = tupla[0]
+                ano = tupla[2]
             
-    print(f'Mês do arquivo com maior precipitação: {maiorMes} | {maiorPre}')
+    print(f'Mês do arquivo com maior precipitação: {maiorMes}/{ano} | {maiorPre:.2f}')
     print()
 
 def mediaMes(arquivo, meses, mes):
