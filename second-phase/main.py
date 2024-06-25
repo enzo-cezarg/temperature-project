@@ -199,6 +199,7 @@ def visualizarUmiVen(mesI, anoI, mesF, anoF, arquivo):
 def mesMaisChuvoso(arquivo):
     """Armazena o mês mais chuvoso de cada ano em um dicionário"""
     maisChuvoso = {}
+    maisChuvosoTuplas = []
     meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
     
     # Anos que não constam no arquivo de dados
@@ -223,10 +224,25 @@ def mesMaisChuvoso(arquivo):
             if soma > maiorPre:
                 maiorPre = soma
                 mesMaiorPre = meses[j-1]
+        maisChuvosoTuplas.append((mesMaiorPre, maiorPre))
         maisChuvoso[i] = (f'{i}: {mesMaiorPre} > {maiorPre:.2f}')
+
+    maisChuvosoArquivo(maisChuvosoTuplas)
 
     # Retorna um dicionário com os meses mais chuvosos por ano e sua precipitação
     return maisChuvoso
+
+def maisChuvosoArquivo(lista):
+    maiorPre = 0
+    maiorMes = ''
+    for tupla in lista:
+        if tupla[1] > maiorPre:
+            if not(tupla[1] > 8000):
+                maiorPre = tupla[1]
+                maiorMes = tupla[0]
+            
+    print(f'Mês do arquivo com maior precipitação: {maiorMes} | {maiorPre}')
+    print()
 
 def mediaMes(arquivo, meses, mes):
     media = {}
@@ -297,6 +313,7 @@ cab = salvarCabecalho('dados.csv')
 
 # Meses que serão comparados com o input do usuário
 mesesInput = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro']
+mesesInputNum = ['1','2','3','4','5','6','7','8','9','10','11','12']
 
 while True:
     gerarMenu()
@@ -340,16 +357,24 @@ while True:
         print('Fim do programa!')
         break
     # Validação do mês digitado
-    while not(mes in mesesInput):
+    while not(mes in mesesInput or mes in mesesInputNum):
         print('Mês inválido! Tente novamente.\n')
         mes = input('Digite um mês para exibir dados: ').lower()
     
+    # Se for digitado o número do mês, converte pro nome
+    if mes in mesesInputNum:
+        for elem in mesesInputNum:
+            if mes == elem:
+                mes = mesesInput[int(mes)-1]
+                break
+
     # Percorre o dicionário das temperaturas mínimas e já faz a soma para
     # o cálculo da média geral de temperaturas mínimas
     medias = mediaMes(dados, mesesInput, mes)
     numMes = contaMeses(mesesInput, mes, 1)
     somaMin = 0
     cont = 0
+
     for i in range(2006, 2017):
         if i == 2016 and numMes >= 7:
             break
